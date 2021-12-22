@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { Col, Container, Image, Row } from 'react-bootstrap'
-import { numberFormate } from '../../Utilities/Util'
+import React, {useEffect, useState} from 'react'
+import {Col, Container, Image, Row} from 'react-bootstrap'
+import {numberFormate} from '../../Utilities/Util'
 import ReactLoading from 'react-loading'
-import { disConnectWallet } from '../../Redux/Profile/actions'
-import { useDispatch, useSelector } from 'react-redux'
-import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai'
-import Logo from '../../Assets/cc_white.svg'
+import {disConnectWallet} from '../../Redux/Profile/actions'
+import {useDispatch, useSelector} from 'react-redux'
+import {AiOutlineCaretDown, AiOutlineCaretUp} from 'react-icons/ai'
+import Logo from '../../Assets/CAPL.svg'
 import {
   clearHashValues,
   vaultDepositAndWithdrawTokens,
 } from '../../Redux/Vault/action'
 import SwapLoading from '../Modals/SwapModals/SwapLoading'
 import VaultSuccess from '../Modals/Vaults/VaultSuccess'
-import { useHistory } from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -20,8 +20,8 @@ const Dashboard = () => {
   // loading
   const [swapLoad, setSwapLoad] = useState(false)
   const [swapSucc, setSwapSucc] = useState(false)
-  const { userAddress } = useSelector((state) => state.profile)
-  const { balanceLoading, usdcBNBBalance, caplPrice, ccptBNBBalance } =
+  const {userAddress} = useSelector((state) => state.profile)
+  const {balanceLoading, usdcBNBBalance, caplPrice, ccptBNBBalance} =
     useSelector((state) => state.swap)
   const {
     reserves,
@@ -35,6 +35,10 @@ const Dashboard = () => {
     apy,
     LpTokenPrice,
     dailyRewards,
+    treasuryUSDC,
+    treasuryCAPL,
+    treasuryUSDC_CAPL,
+    apr,
   } = useSelector((state) => state.vault)
   const handleDisconnect = () => {
     dispatch(disConnectWallet())
@@ -116,7 +120,7 @@ const Dashboard = () => {
               </Col> */}
             </Row>
             <Row>
-              <Col className='mb-3' sm={12} md={12} lg={4} xl={4} xxl={4}>
+              <Col className='mb-3' sm={12} md={12} lg={3} xl={4} xxl={4}>
                 <div className='dd_card first'>
                   <div>
                     <h3>Daily Earnings</h3>
@@ -127,25 +131,20 @@ const Dashboard = () => {
                           color='#ffffff'
                           height={0}
                           width={30}
-                          className='mb-4'
+                          className='mb-4 m-auto'
                         />
                       ) : (
-                        `${numberFormate(withdrawLpBalance/totalLp*5000*caplPrice)} USD`
+                        totalLp &&
+                        `${numberFormate(
+                          (withdrawLpBalance / totalLp) * 5000 * caplPrice
+                        )} USD`
                       )}
                     </h4>
-                    {/*
-                    <p className='green'>
-                      +0.00%{' '}
-                      <span>
-                        <AiOutlineCaretUp />
-                      </span>
-                    </p>
-                    */}
                   </div>
                   <div>
                     <h3>APR</h3>
                     <p className='green'>
-                      {numberFormate((5000*caplPrice) / (totalLp / 100000000 * LpTokenPrice ) * 100 * 365)}%
+                      {numberFormate(apr)}%
                       <span>
                         <AiOutlineCaretUp />
                       </span>
@@ -154,7 +153,10 @@ const Dashboard = () => {
                   <div>
                     <h3>Tvl</h3>
                     <p className='green'>
-                      {numberFormate((withdrawLpBalance / 100000000) * LpTokenPrice)} USD
+                      {numberFormate(
+                        (withdrawLpBalance / 100000000) * LpTokenPrice
+                      )}{' '}
+                      USD
                       <span>
                         <AiOutlineCaretUp />
                       </span>
@@ -162,19 +164,23 @@ const Dashboard = () => {
                   </div>
                 </div>
               </Col>
-
               <Col className='mb-3' sm={12} md={12} lg={8} xl={8} xxl={8}>
                 <Row>
-                  <Col className='mb-3' sm={12} md={12} lg={12} xl={12} xxl={12}>
+                  <Col
+                    className='mb-3'
+                    sm={12}
+                    md={12}
+                    lg={12}
+                    xl={12}
+                    xxl={12}
+                  >
                     <div className='dd_card third'>
                       <div>
                         <div className='logo'>
                           <Image src={Logo} alt='' />
                           <h3>CAPL</h3>
                         </div>
-                        <div>
-                          {/*<p className='green'>+0.00%</p>*/}
-                        </div>
+                        <div>{/*<p className='green'>+0.00%</p>*/}</div>
                         <div className='price'>
                           <h3>
                             {balanceLoading ? (
@@ -183,7 +189,7 @@ const Dashboard = () => {
                                 color='#ffffff'
                                 height={0}
                                 width={30}
-                                className='ms-auto mb-4'
+                                className='ms-auto mt-3'
                               />
                             ) : (
                               `${numberFormate(caplPrice)} USD`
@@ -195,7 +201,7 @@ const Dashboard = () => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col className='mb-3' sm={12} md={12} lg={12} xl={12} xxl={12}>
+                  <Col sm={12} md={12} lg={12} xl={12} xxl={12}>
                     <div className='dd_card second'>
                       <div>
                         <p>Your Balance</p>
@@ -206,10 +212,12 @@ const Dashboard = () => {
                               color='#ffffff'
                               height={0}
                               width={30}
-                              className='mb-4'
+                              className='mt-3'
                             />
                           ) : (
-                            `${numberFormate(ccptBNBBalance)} CAPL (${numberFormate(
+                            `${numberFormate(
+                              ccptBNBBalance
+                            )} CAPL (${numberFormate(
                               ccptBNBBalance * caplPrice
                             )} USD)`
                           )}
@@ -217,7 +225,29 @@ const Dashboard = () => {
                       </div>
                       <div>
                         <p>Your Staked Balance</p>
-                        <p>{numberFormate(withdrawLpBalance)} USDC-CAPL Shares ({numberFormate((withdrawLpBalance / 100000000) * LpTokenPrice)} USD)</p>
+                        <p>
+                          {balanceLoading ? (
+                            <ReactLoading
+                              type='bars'
+                              color='#ffffff'
+                              height={0}
+                              width={30}
+                              className='mt-3'
+                            />
+                          ) : (
+                            `${numberFormate(
+                              withdrawLpBalance
+                            )} USDC-CAPL Shares (${numberFormate(
+                              (withdrawLpBalance / 100000000) * LpTokenPrice
+                            )} USD)`
+                          )}
+
+                          {/* {numberFormate(withdrawLpBalance)} USDC-CAPL Shares (
+                          {numberFormate(
+                            (withdrawLpBalance / 100000000) * LpTokenPrice
+                          )}{' '}
+                          USD) */}
+                        </p>
                       </div>
                       <div>
                         <p>Daily Revenue</p>
@@ -228,10 +258,14 @@ const Dashboard = () => {
                               color='#ffffff'
                               height={0}
                               width={30}
-                              className='mb-4'
+                              className='mt-3'
                             />
                           ) : (
-                            `${numberFormate(withdrawLpBalance /totalLp * 5000)} CAPL (${numberFormate(withdrawLpBalance/totalLp*5000*caplPrice)} USD)`
+                            `${numberFormate(
+                              (withdrawLpBalance / totalLp) * 5000
+                            )} CAPL (${numberFormate(
+                              (withdrawLpBalance / totalLp) * 5000 * caplPrice
+                            )} USD)`
                           )}
                         </p>
                       </div>
@@ -244,21 +278,21 @@ const Dashboard = () => {
                               color='#ffffff'
                               height={0}
                               width={30}
-                              className='mb-4'
+                              className='mt-3'
                             />
                           ) : (
-                            `${numberFormate((5000*caplPrice) / (totalLp / 100000000 * LpTokenPrice ) * 100 )}%`
+                            `${numberFormate(
+                              ((5000 * caplPrice) /
+                                ((totalLp / 100000000) * LpTokenPrice)) *
+                                100
+                            )}%`
                           )}
                         </p>
                       </div>
                     </div>
                   </Col>
                 </Row>
-
-
               </Col>
-
-
             </Row>
             <div className='credentials'>
               <Row className='row'>
@@ -269,9 +303,52 @@ const Dashboard = () => {
                       <div className='capl'>
                         <p>Your Staked USDC-CAPL Shares</p>
                         <h3>
-                          {numberFormate(withdrawLpBalance)} LP Shares (
-                          {numberFormate((withdrawLpBalance / 100000000) * LpTokenPrice)} USD)
+                          {balanceLoading ? (
+                            <ReactLoading
+                              type='bars'
+                              color='#ffffff'
+                              height={0}
+                              width={30}
+                              className='mb-4 m-auto'
+                            />
+                          ) : (
+                            `${numberFormate(
+                              withdrawLpBalance
+                            )} LP Shares (${numberFormate(
+                              (withdrawLpBalance / 100000000) * LpTokenPrice
+                            )}) USD`
+                          )}
                         </h3>
+                      </div>
+                      <div className='mt-4'>
+                        <div>
+                          <p>Your Daily Revenue</p>
+                          <h3>
+                            {balanceLoading ? (
+                              <ReactLoading
+                                type='bars'
+                                color='#ffffff'
+                                height={0}
+                                width={30}
+                                className='mb-4 m-auto'
+                              />
+                            ) : (
+                              totalLp &&
+                              `${numberFormate(
+                                (withdrawLpBalance / totalLp) * 5000
+                              )} CAPL`
+                            )}
+                          </h3>
+                          {!balanceLoading && totalLp && (
+                            <p className='green'>
+                              (
+                              {numberFormate(
+                                (withdrawLpBalance / totalLp) * 5000 * caplPrice
+                              )}{' '}
+                              USD)
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -280,7 +357,7 @@ const Dashboard = () => {
                   <div className='second_div'>
                     <h4>Revenue Projections</h4>
                     <Row>
-                      <Col className='mb-3' sm={12} md={6} lg={3} xl={3} xxl={3}>
+                      {/* <Col className='mb-3' sm={12} md={6} lg={3} xl={3} xxl={3}>
                         <div className='main_card'>
                           <div>
                             <p>Your Daily Revenue</p>
@@ -290,35 +367,128 @@ const Dashboard = () => {
                             </p>
                           </div>
                         </div>
-                      </Col>
-                      <Col className='mb-3' sm={12} md={6} lg={3} xl={3} xxl={3}>
+                      </Col> */}
+                      <Col
+                        className='mb-3'
+                        sm={12}
+                        md={6}
+                        lg={4}
+                        xl={4}
+                        xxl={4}
+                      >
                         <div className='main_card'>
                           <div>
                             <p>Your Weekly Revenue</p>
-                            <h3>{numberFormate(withdrawLpBalance/totalLp*5000*7)} CAPL</h3>
-                            <p className='green'>
-                              ({numberFormate(withdrawLpBalance/totalLp*5000*7*caplPrice)} USD)
-                            </p>
+                            <h3>
+                              {balanceLoading ? (
+                                <ReactLoading
+                                  type='bars'
+                                  color='#ffffff'
+                                  height={0}
+                                  width={30}
+                                  className='mb-4 m-auto'
+                                />
+                              ) : (
+                                totalLp &&
+                                `${numberFormate(
+                                  (withdrawLpBalance / totalLp) * 5000 * 7
+                                )} CAPL`
+                              )}
+                            </h3>
+                            {!balanceLoading && totalLp && (
+                              <p className='green'>
+                                (
+                                {numberFormate(
+                                  (withdrawLpBalance / totalLp) *
+                                    5000 *
+                                    7 *
+                                    caplPrice
+                                )}{' '}
+                                USD)
+                              </p>
+                            )}
                           </div>
                         </div>
                       </Col>
-                      <Col className='mb-3' sm={12} md={6} lg={3} xl={3} xxl={3}>
+                      <Col
+                        className='mb-3'
+                        sm={12}
+                        md={6}
+                        lg={4}
+                        xl={4}
+                        xxl={4}
+                      >
                         <div className='main_card'>
                           <p>Your Monthly Revenue</p>
-                            <h3>{numberFormate(withdrawLpBalance/totalLp*5000*30)} CAPL</h3>
+                          <h3>
+                            {balanceLoading ? (
+                              <ReactLoading
+                                type='bars'
+                                color='#ffffff'
+                                height={0}
+                                width={30}
+                                className='mb-4 m-auto'
+                              />
+                            ) : (
+                              totalLp &&
+                              `${numberFormate(
+                                (withdrawLpBalance / totalLp) * 5000 * 30
+                              )} CAPL`
+                            )}
+                          </h3>
+                          {!balanceLoading && totalLp && (
                             <p className='green'>
-                              ({numberFormate(withdrawLpBalance/totalLp*5000*30*caplPrice)} USD)
-                          </p>
+                              (
+                              {numberFormate(
+                                (withdrawLpBalance / totalLp) *
+                                  5000 *
+                                  30 *
+                                  caplPrice
+                              )}{' '}
+                              USD)
+                            </p>
+                          )}
                         </div>
                       </Col>
-                      <Col className='mb-3' sm={12} md={6} lg={3} xl={3} xxl={3}>
+                      <Col
+                        className='mb-3'
+                        sm={12}
+                        md={6}
+                        lg={4}
+                        xl={4}
+                        xxl={4}
+                      >
                         <div className='main_card'>
                           <div>
                             <p>Your Annual Revenue</p>
-                            <h3>{numberFormate(withdrawLpBalance/totalLp*5000*365)} CAPL</h3>
-                            <p className='green'>
-                              ({numberFormate(withdrawLpBalance/totalLp*5000*365*caplPrice)} USD)
-                            </p>
+                            <h3>
+                              {balanceLoading ? (
+                                <ReactLoading
+                                  type='bars'
+                                  color='#ffffff'
+                                  height={0}
+                                  width={30}
+                                  className='mb-4 m-auto'
+                                />
+                              ) : (
+                                totalLp &&
+                                `${numberFormate(
+                                  (withdrawLpBalance / totalLp) * 5000 * 365
+                                )} CAPL`
+                              )}
+                            </h3>
+                            {!balanceLoading && totalLp && (
+                              <p className='green'>
+                                (
+                                {numberFormate(
+                                  (withdrawLpBalance / totalLp) *
+                                    5000 *
+                                    365 *
+                                    caplPrice
+                                )}{' '}
+                                USD)
+                              </p>
+                            )}
                           </div>
                         </div>
                       </Col>
@@ -331,9 +501,9 @@ const Dashboard = () => {
         </Container>
         <div className='title_info'>
           <h4>PORTFOLIO</h4>
-          <Container>
+          {/* <Container>
             <p></p>
-          </Container>
+          </Container> */}
           {/* <button className='btn_brand' onClick={handleDisconnect}>
             Disconnect
           </button> */}
@@ -367,9 +537,7 @@ const Dashboard = () => {
                                 className='mb-4'
                               />
                             ) : (
-                              `${
-                                depositedLpBalance
-                              } (${numberFormate(
+                              `${depositedLpBalance} (${numberFormate(
                                 (depositedLpBalance * LpTokenPrice) / 100000000
                               )} USD)`
                             )}
@@ -448,7 +616,9 @@ const Dashboard = () => {
                                 className='ms-auto mb-4'
                               />
                             ) : (
-                              `${numberFormate(vaultRewards)} CAPL (${numberFormate(
+                              `${numberFormate(
+                                vaultRewards
+                              )} CAPL (${numberFormate(
                                 vaultRewards * caplPrice
                               )} USD)`
                             )}
@@ -534,7 +704,7 @@ const Dashboard = () => {
                             className='profile_loading'
                           />
                         ) : (
-                          `${numberFormate((5000*caplPrice) / (totalLp / 100000000 * LpTokenPrice ) * 100 * 365)}%`
+                          `${numberFormate(apr)}%`
                         )}
                       </p>
                     </div>
@@ -544,7 +714,7 @@ const Dashboard = () => {
             </Row>
             <div className='title_info platform'>
               <h4>PLATFORM</h4>
-              <p></p>
+              {/* <p></p> */}
             </div>
             <Row>
               <Col className='mb-3' sm={12} md={12} lg={6} xl={6} xxl={6}>
@@ -571,8 +741,8 @@ const Dashboard = () => {
                   <div className='db_bottom'>
                     <div className='db_bottom_left'>
                       <Image src={Logo} alt='' />
-                      <h5>CAPL</h5>
-                      <p>
+                      <h5 className='ms-2'>CAPL</h5>
+                      <p className='ms-2'>
                         +0.00%{' '}
                         <span>
                           <AiOutlineCaretUp />
@@ -686,7 +856,7 @@ const Dashboard = () => {
                             className='mb-4'
                           />
                         ) : (
-                          `${numberFormate(0)} USDC`
+                          `${numberFormate(treasuryUSDC)} USDC`
                         )}
                       </p>
                     </div>
@@ -702,7 +872,7 @@ const Dashboard = () => {
                             className='mb-4'
                           />
                         ) : (
-                          `${numberFormate(0)} CAPL`
+                          `${numberFormate(treasuryCAPL)} CAPL`
                         )}
                       </p>
                     </div>
@@ -718,7 +888,8 @@ const Dashboard = () => {
                             className='mb-4'
                           />
                         ) : (
-                          `${numberFormate(0)} USDC-CAPL`
+                          // `${numberFormate(treasuryUSDC_CAPL)} USDC-CAPL`
+                          `${treasuryUSDC_CAPL} USDC-CAPL`
                         )}
                       </p>
                     </div>
