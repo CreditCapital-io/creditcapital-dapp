@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Container, Image } from 'react-bootstrap'
-import { RiListSettingsLine } from 'react-icons/ri'
-import { VscHistory } from 'react-icons/vsc'
-import { BiChevronDown } from 'react-icons/bi'
-import { BsArrowDown } from 'react-icons/bs'
+import React, {useEffect, useState} from 'react'
+import {Container, Image} from 'react-bootstrap'
+import {RiListSettingsLine} from 'react-icons/ri'
+import {VscHistory} from 'react-icons/vsc'
+import {BiChevronDown} from 'react-icons/bi'
+import {BsArrowDown} from 'react-icons/bs'
 import ReactLoading from 'react-loading'
 
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import RecentTransactions from '../Modals/RecentTransactions/RecentTransactions'
 import SettingsModal from '../Modals/SettingsModal/SettingsModal'
-import { useDispatch, useSelector } from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {
   convertTokenValue,
   REMOVE_hash,
@@ -20,7 +20,7 @@ import SwapSuccess from '../Modals/SwapModals/SwapSuccess'
 
 // svgs
 import USDC from '../../Assets/money/usdc.svg'
-import { numberFormate } from '../../Utilities/Util'
+import {numberFormate} from '../../Utilities/Util'
 
 const SwapPool = () => {
   // Redux State
@@ -34,7 +34,7 @@ const SwapPool = () => {
     balanceLoading,
     ccptBNBBalance,
   } = useSelector((state) => state.swap)
-  const { userAddress } = useSelector((state) => state.profile)
+  const {userAddress} = useSelector((state) => state.profile)
   const [price, setPrice] = useState('')
   const [secondPrice, setSecondPrice] = useState('')
   const [openTrans, setOpenTrans] = useState(false)
@@ -76,8 +76,21 @@ const SwapPool = () => {
     }
   }, [swapHash])
 
+  // const handlePriceChange = (number) => {
+  //   setPrice(number.value)
+  //   dispatch(convertTokenValue(number.value, firstToken))
+  //   setFirstAvailableForChange(false)
+  //   setSecondAvailableForChange(true)
+  // }
+
+  // const handlePriceChangeTwo = (number) => {
+  //   setSecondPrice(number.value)
+  //   dispatch(convertTokenValue(number.value, firstToken))
+  //   setFirstAvailableForChange(true)
+  //   setSecondAvailableForChange(false)
+  // }
   const handlePriceChange = (e) => {
-    const { value } = e.target
+    const {value} = e.target
     const priceRegex = /^[0-9]*\.?[0-9]*$/
     if (value === '') {
       setPrice('')
@@ -91,7 +104,7 @@ const SwapPool = () => {
   }
 
   const handlePriceChangeTwo = (e) => {
-    const { value } = e.target
+    const {value} = e.target
     const priceRegex = /^[0-9]*\.?[0-9]*$/
     if (value === '') {
       setPrice('')
@@ -115,8 +128,6 @@ const SwapPool = () => {
   }
 
   const MaxValue = (value) => {
-    console.log('firstToken', firstToken)
-    console.log('usdcBNBBalance', value)
     const priceRegex = /^[0-9]*\.?[0-9]*$/
     if (value === '') {
       setPrice('')
@@ -140,14 +151,58 @@ const SwapPool = () => {
       setSecondAvailableForChange(false)
     }
   }
+  // const setMaximumBalanceOfUSDC = () => {
+  //   const priceRegex = /^[0-9]*\.?[0-9]*$/
+
+  //   if (usdcBNBBalance === '') {
+  //     setPrice('')
+  //     setSecondPrice('')
+  //   } else if (priceRegex.test(usdcBNBBalance)) {
+  //     if (toggle) {
+  //       setSecondPrice(usdcBNBBalance)
+  //     } else {
+  //       setPrice(usdcBNBBalance)
+  //     }
+  //     dispatch(convertTokenValue(usdcBNBBalance, firstToken))
+  //     setFirstAvailableForChange(false)
+  //     setSecondAvailableForChange(true)
+  //   }
+  // }
+  // const setMaximumBalanceOfCCPT = () => {
+  //   const priceRegex = /^[0-9]*\.?[0-9]*$/
+  //   if (ccptBNBBalance === '') {
+  //     setPrice('')
+  //     setSecondPrice('')
+  //   } else if (priceRegex.test(ccptBNBBalance)) {
+  //     if (toggle) {
+  //       setPrice(ccptBNBBalance)
+  //     } else {
+  //       setSecondPrice(ccptBNBBalance)
+  //     }
+  //     dispatch(convertTokenValue(ccptBNBBalance, secondToken))
+  //     setFirstAvailableForChange(true)
+  //     setSecondAvailableForChange(false)
+  //   }
+  // }
 
   const makeSwap = () => {
     dispatch(swapTokens(price, toggle ? 'CAPL' : 'USDC', time))
   }
 
+  // useEffect(() => {
+  //   if (
+  //     price === '' ||
+  //     usdcBNBBalance === '0' ||
+  //     ccptBNBBalance === '0' ||
+  //     !userAddress
+  //   ) {
+  //     setErrors(true)
+  //   } else {
+  //     setErrors(false)
+  //   }
+  // }, [usdcBNBBalance, ccptBNBBalance, userAddress, price])
+
   useEffect(() => {
-    console.log('toggle', toggle)
-    console.log('###', toggle, price, ccptBNBBalance, usdcBNBBalance, balanceLoading, userAddress)
     if (!toggle) {
       if (
         Number(price) > Number(usdcBNBBalance) ||
@@ -157,7 +212,6 @@ const SwapPool = () => {
         !userAddress ||
         balanceLoading
       ) {
-        console.log('!!!!!!!!!')
         setErrors(true)
       } else {
         setErrors(false)
@@ -177,6 +231,7 @@ const SwapPool = () => {
       }
     }
   }, [toggle, price, ccptBNBBalance, usdcBNBBalance, balanceLoading, userAddress])
+
   return (
     <>
       <div className='swap'>
@@ -201,34 +256,22 @@ const SwapPool = () => {
               </div>
               <div className='box_wrapper_header_right'>
                 <RiListSettingsLine onClick={() => setOpenSet(true)} />
+                {/* <VscHistory onClick={() => setOpenTrans(true)} /> */}
               </div>
             </div>
-
-
-
-
-
-
-            {/* ---------------------------------------------------------------------------------------------------- */}
-
-
-
-
-
-
             <div className='box_wrapper_container'>
               <div className='box_wrapper_container_top'>
                 <h4>Send</h4>
                 <h4
                   className='d-flex align-items-start'
-                  style={{ cursor: 'pointer' }}
+                  style={{cursor: 'pointer'}}
                   onClick={() =>
                     MaxValue(
                       firstToken === 'USDC'
                         ? usdcBNBBalance
                         : firstToken === 'CAPL'
-                          ? ccptBNBBalance
-                          : 0
+                        ? ccptBNBBalance
+                        : 0
                     )
                   }
                 >
@@ -250,12 +293,28 @@ const SwapPool = () => {
               </div>
               <div className='box_wrapper_container_bottom'>
                 <div className='box_wrapper_container_bottom_left'>
+                  {/* <NumberFormat
+                    disabled={false}
+                    thousandsGroupStyle='thousand'
+                    value={price}
+                    decimalSeparator='.'
+                    displayType='input'
+                    type='text'
+                    thousandSeparator={true}
+                    allowNegative={false}
+                    fixedDecimalScale={true}
+                    allowLeadingZeros={false}
+                    decimalScale={4}
+                    onValueChange={handlePriceChange}
+                    placeholder='0.0000'
+                    className='shadow-none form-control'
+                  /> */}
                   <input
                     placeholder='0.0000'
                     className='shadow-none form-control'
                     value={
                       firstAvailableForChange &&
-                        (price != '' || secondPrice != '')
+                      (price != '' || secondPrice != '')
                         ? toggle
                           ? ccptPrice
                           : usdcPrice
@@ -265,6 +324,7 @@ const SwapPool = () => {
                   />
                 </div>
                 <div className='box_wrapper_container_bottom_right'>
+                  {/* <h4 onClick={setMaximumBalanceOfUSDC}>MAX</h4> */}
                   {firstToken === 'USDC' && <Image src={USDC} alt='' />}
                   <h4>{firstToken} </h4>
                 </div>
@@ -279,14 +339,14 @@ const SwapPool = () => {
                 <h4>Receive (estimated)</h4>
                 <h4
                   className='d-flex align-items-start'
-                  style={{ cursor: 'pointer' }}
+                  style={{cursor: 'pointer'}}
                   onClick={() =>
                     MaxCAPLValue(
                       secondToken === 'CAPL'
                         ? ccptBNBBalance
                         : secondToken === 'USDC'
-                          ? usdcBNBBalance
-                          : 0
+                        ? usdcBNBBalance
+                        : 0
                     )
                   }
                 >
@@ -308,12 +368,28 @@ const SwapPool = () => {
               </div>
               <div className='box_wrapper_container_bottom'>
                 <div className='box_wrapper_container_bottom_left'>
+                  {/* <NumberFormat
+                    disabled={false}
+                    thousandsGroupStyle='thousand'
+                    value={secondPrice}
+                    decimalSeparator='.'
+                    displayType='input'
+                    type='text'
+                    thousandSeparator={true}
+                    allowNegative={false}
+                    fixedDecimalScale={true}
+                    allowLeadingZeros={false}
+                    decimalScale={4}
+                    onValueChange={handlePriceChangeTwo}
+                    placeholder='0.0000'
+                    className='shadow-none form-control'
+                  /> */}
                   <input
                     placeholder='0.0000'
                     className='shadow-none form-control'
                     value={
                       secondAvailableForChange &&
-                        (price != '' || secondPrice != '')
+                      (price != '' || secondPrice != '')
                         ? toggle
                           ? usdcPrice
                           : ccptPrice
@@ -323,6 +399,7 @@ const SwapPool = () => {
                   />
                 </div>
                 <div className='box_wrapper_container_bottom_right'>
+                  {/* <h4 onClick={setMaximumBalanceOfCCPT}>MAX</h4> */}
                   {secondToken === 'USDC' && <Image src={USDC} alt='' />}
                   <h4>{secondToken} </h4>
                 </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 // Pages
 import NotFound from './Pages/NotFound'
@@ -7,7 +7,6 @@ import Portfolio from './Pages/Portfolio'
 import Swap from './Pages/Swap'
 import Liquidity from './Pages/Liquidity'
 import Vault from './Pages/Vault'
-import Test from './Pages/Test'
 import Admin from './Pages/Admin'
 
 // components
@@ -22,7 +21,6 @@ function App() {
         <Header />
         <Switch>
           <Route path='/' exact component={Vault} />
-          <Route path='/test' component={Test} />
           <Route path='/portfolio' component={Portfolio} />
           <Route path='/swap' component={Swap} />
           <Route path='/liquidity' component={Liquidity} />
