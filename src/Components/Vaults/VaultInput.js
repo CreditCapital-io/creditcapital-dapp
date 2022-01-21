@@ -162,7 +162,7 @@ const VaultInput = ({
           allowLeadingZeros={false}
           decimalScale={digits}
           onValueChange={handlePriceChange}
-          placeholder='0.0000'
+          placeholder='0.0001'
           className='shadow-none form-control'
         />
         {/* <InputGroup.Text>MAX</InputGroup.Text> */}

@@ -1,5 +1,6 @@
-import {CANCEL_LOADING, GET_CAPL_PRICE, PROFILE_FAIL} from './constans'
+import { CANCEL_LOADING, GET_CAPL_PRICE, PROFILE_FAIL } from './constans'
 import {
+  TOKEN,
   GET_CONVERTED_CCPT_VALUES_SUCCESS,
   GET_CONVERTED_USDC_VALUES_SUCCESS,
   GET_SWAP_TOKENS_BALANCE,
@@ -9,9 +10,12 @@ import {
   SWAPPING_SUCCESS,
   PROFILE_REQ,
   PROFILE_SUCC,
+  USDCAPPROVE_SUCCESS,
+  APPROVING_FAIL,
 } from './constans'
 
 const initialState = {
+  token: 'USDC',
   swapLoading: false,
   swapError: false,
   swapHash: '',
@@ -23,9 +27,16 @@ const initialState = {
   balanceLoading: false,
   balanceError: false,
   caplPrice: '',
+  usdcApprove: false,
+  approveLoading: false,
 }
 export const swapReducer = (state = initialState, action) => {
   switch (action.type) {
+    case TOKEN:
+      return {
+        ...state,
+        token: action.payload.changeToken,
+      }
     case GET_CAPL_PRICE:
       return {
         ...state,
@@ -94,6 +105,17 @@ export const swapReducer = (state = initialState, action) => {
       return {
         ...state,
         swapLoading: false,
+      }
+    case USDCAPPROVE_SUCCESS:
+      return {
+        ...state,
+        usdcApprove: true,
+      }
+    case APPROVING_FAIL:
+      return {
+        ...state,
+        approveLoading: false,
+        approveError: action.payload,
       }
     default:
       return state
