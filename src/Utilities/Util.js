@@ -100,10 +100,16 @@ export const gasPrice = async (web3) => {
 export const getTheTimeDifference = (sec) => {
   const timeInSec = Number(sec) * 1000
   const currentTimeInSec = new Date().getTime()
-  const difference = timeInSec - currentTimeInSec
-  if (difference > 0) {
+  // const difference = timeInSec - currentTimeInSec
+  // if (difference > 0) {
+  //   return true
+  // } else {
+  //   return false
+  // }
+
+  if (timeInSec - currentTimeInSec > 0) {
     return true
-  } else {
-    return false
   }
+  
+  return false
 }
