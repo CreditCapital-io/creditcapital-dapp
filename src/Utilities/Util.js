@@ -60,6 +60,7 @@ export const priceConversion = (type, formate, amount, web3) => {
 }
 
 export const gasPrice = async (web3) => {
+  console.log("gasPrice");
   // const gasPrice = await web3.eth.getGasPrice()
   // if (number) {
   //   const newGasPrice = web3.utils.toHex(Number(gasPrice * number)?.toFixed(0))
@@ -70,18 +71,30 @@ export const gasPrice = async (web3) => {
 
   let newGasPrice = 20000000000
   let gasPrice
-  const gasFee2 = await fetch('https://gasstation-mainnet.matic.network')
-  // const gasFee2 = await fetch('https://polygonscan.com/gastracker')
-    .then((response) => response.json())
-    .then((json) => {
-      gasPrice = json['fast'] * 10 ** 9
-      // if (gasPrice > newGasPrice) {
-      //   gasPrice = newGasPrice
-      // }
-      newGasPrice = gasPrice
-    })
-    .catch((err) => console.error(err))
-  return newGasPrice
+
+  /*
+    const gasFee2 = await fetch('https://gasstation-mainnet.matic.network')
+    // const gasFee2 = await fetch('https://polygonscan.com/gastracker')
+      .then((response) => response.json())
+      .then((json) => {
+        gasPrice = json['fast'] * 10 ** 9
+        // if (gasPrice > newGasPrice) {
+        //   gasPrice = newGasPrice
+        // }
+        newGasPrice = gasPrice
+      })
+      .catch((err) => console.error(err))
+  */
+  
+  const gasFeeObj = await fetch('https://gasstation-mainnet.matic.network');
+  const gasFee = gasFeeObj.json();
+
+  gasPrice = gasFee['fast'] * 10 ** 9;
+  if (gasPrice <= newGasPrice) {
+    newGasPrice = gasPrice;
+  }
+  
+  return newGasPrice;
 }
 
 export const getTheTimeDifference = (sec) => {
