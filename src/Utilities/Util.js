@@ -60,7 +60,6 @@ export const priceConversion = (type, formate, amount, web3) => {
 }
 
 export const gasPrice = async (web3) => {
-  console.log("gasPrice");
   // const gasPrice = await web3.eth.getGasPrice()
   // if (number) {
   //   const newGasPrice = web3.utils.toHex(Number(gasPrice * number)?.toFixed(0))
