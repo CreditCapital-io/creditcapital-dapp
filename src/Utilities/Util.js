@@ -70,27 +70,45 @@ export const gasPrice = async (web3) => {
 
   let newGasPrice = 20000000000
   let gasPrice
-  const gasFee2 = await fetch('https://gasstation-mainnet.matic.network')
-  // const gasFee2 = await fetch('https://polygonscan.com/gastracker')
-    .then((response) => response.json())
-    .then((json) => {
-      gasPrice = json['fast'] * 10 ** 9
-      // if (gasPrice > newGasPrice) {
-      //   gasPrice = newGasPrice
-      // }
-      newGasPrice = gasPrice
-    })
-    .catch((err) => console.error(err))
-  return newGasPrice
+
+  /*
+    const gasFee2 = await fetch('https://gasstation-mainnet.matic.network')
+    // const gasFee2 = await fetch('https://polygonscan.com/gastracker')
+      .then((response) => response.json())
+      .then((json) => {
+        gasPrice = json['fast'] * 10 ** 9
+        // if (gasPrice > newGasPrice) {
+        //   gasPrice = newGasPrice
+        // }
+        newGasPrice = gasPrice
+      })
+      .catch((err) => console.error(err))
+  */
+  
+  const gasFeeObj = await fetch('https://gasstation-mainnet.matic.network');
+  const gasFee = gasFeeObj.json();
+
+  gasPrice = gasFee['fast'] * 10 ** 9;
+  if (gasPrice <= newGasPrice) {
+    newGasPrice = gasPrice;
+  }
+  
+  return newGasPrice;
 }
 
 export const getTheTimeDifference = (sec) => {
   const timeInSec = Number(sec) * 1000
   const currentTimeInSec = new Date().getTime()
-  const difference = timeInSec - currentTimeInSec
-  if (difference > 0) {
+  // const difference = timeInSec - currentTimeInSec
+  // if (difference > 0) {
+  //   return true
+  // } else {
+  //   return false
+  // }
+
+  if (timeInSec - currentTimeInSec > 0) {
     return true
-  } else {
-    return false
   }
+  
+  return false
 }
